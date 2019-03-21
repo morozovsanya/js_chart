@@ -1,0 +1,35 @@
+body {
+    background-color: rgba(36, 47, 62, 1);
+    color: white
+}
+
+.pi-box {
+    background-color: rgba(37, 50, 65, 1);
+    border-color: rgba(32, 42, 55, 1);
+    /*box-shadow: 0 0 10px 10px rgba(0,0,0,0.5)*/
+}
+
+.pi-line{
+    stroke: rgba(59, 74, 90, 1);
+}
+
+.grid {
+    stroke:rgba(43, 53, 68, 1);
+}
+
+.labels {
+    fill: rgba(84, 103, 120, 1);
+}
+
+.nav {
+    fill: rgba(64, 86, 107, 1);
+}
+
+.nav-pos {
+    stroke: rgba(64, 86, 107, 1);
+}
+
+.graph-button {
+    border-color: rgba(52, 70, 88, 1);
+    color: white
+}

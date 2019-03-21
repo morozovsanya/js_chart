@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="stylesheet" href="js_chart.css">
+    <link rel="stylesheet" href="day.css">
+    <script src="./js/js_chart.min.js"></script>
+
+    <script type="text/javascript" src="chart_data.js"></script>
+    <script type="text/javascript" >
+       function load() {
+            Chart("chart1",chart_data[1])
+            Chart("chart2",chart_data[2])
+            Chart("chart3",chart_data[3])
+            Chart("chart4",chart_data[4])
+        }
+    </script>
+</head>
+
+<body onload="load()">
+    <script type="text/javascript">
+        function SwitchMode(){
+            var a=document.getElementById("switchTheme")
+            if(a.textContent==="Switch to Day Mode"){
+                a.textContent="Switch to Night Mode";
+                changeCSS('day.css', 1);
+            } else {
+                a.textContent="Switch to Day Mode";
+                changeCSS('night.css', 1);
+            }
+        }
+
+        function changeCSS(cssFile, cssLinkIndex) {
+            var oldlink = document.getElementsByTagName("link").item(cssLinkIndex);
+
+            var newlink = document.createElement("link");
+            newlink.setAttribute("rel", "stylesheet");
+            newlink.setAttribute("type", "text/css");
+            newlink.setAttribute("href", cssFile);
+
+            document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
+        }
+    </script>
+    
+    <div class="switch-theme">
+        <a id="switchTheme" href="#" onclick="SwitchMode();">Switch to Night Mode</a> 
+    </div>
+    <h1>Followers</h1>
+    <div>
+        <div id="chart1" class="chart"></div>
+        <div id="chart2" class="chart"></div>
+        <div id="chart3" class="chart"></div>
+        <div id="chart4" class="chart"></div>
+    </div>
+
+</body>
+
+</html>
