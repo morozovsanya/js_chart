@@ -6,7 +6,6 @@ body {
 .pi-box {
     background-color: rgba(37, 50, 65, 1);
     border-color: rgba(32, 42, 55, 1);
-    /*box-shadow: 0 0 10px 10px rgba(0,0,0,0.5)*/
 }
 
 .pi-line{

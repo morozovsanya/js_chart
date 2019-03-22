@@ -255,6 +255,7 @@ function getMousePosition(evt, el) {
 }
 
 function Navigator(parent, range, transf, g_el) {
+    Animatable.call(this);
 
     var svg = document.createElementNS("http://www.w3.org/2000/svg", "g");
     svg.className.baseVal = "nav";
@@ -268,20 +269,20 @@ function Navigator(parent, range, transf, g_el) {
         r: document.createElementNS("http://www.w3.org/2000/svg", "rect")
     };
 
-    for (var r in rects) {
-        rects[r].setAttribute("id", r);
-        if (r === 'r' || r === 'l') {
-            rects[r].className.baseVal = "nav-cover draggable";
+    for (var rt in rects) {
+        rects[rt].setAttribute("id", r);
+        if (rt === 'r' || rt === 'l') {
+            rects[rt].className.baseVal = "nav-cover draggable";
             continue;
         }
-        else if (r === "p"){
-            rects[r].className.baseVal = "nav-pos draggable";
+        else if (rt === "p"){
+            rects[rt].className.baseVal = "nav-pos draggable";
             continue;
         }
         else
-            rects[r].className.baseVal = "nav-brd draggable";
+            rects[rt].className.baseVal = "nav-brd draggable";
 
-        svg.appendChild(rects[r]);
+        svg.appendChild(rects[rt]);
     }
 
     svg.appendChild(g_el);
@@ -368,7 +369,6 @@ function Navigator(parent, range, transf, g_el) {
     */
 
     function render(l, r) {
-        //var {l,r}=self;
         var rect;
         if (rects.l.getAttribute("x") != transf.box.x)
             rects.l.setAttribute("x", transf.box.x);
@@ -401,8 +401,35 @@ function Navigator(parent, range, transf, g_el) {
             rects.r.setAttribute("width", Math.max(transf.box.w - r, 0));
     }
 
+    function move(from, to) {
+        return function (progress) {
+            self.cur = {
+                l: getCurvalue(from.l, to.l, progress),
+                r: getCurvalue(from.r, to.r, progress),
+            };
+            render(l,r);
+        };
+    }
+
+    var to_l, to_r, from_l, from_r ,l, r;
+
     this.update = function () {
-        render(transf.toView(range.low, "x"), transf.toView(range.high, "x"));
+        to_l=transf.toView(range.low, "x");
+        to_r=transf.toView(range.high, "x");
+        if(typeof l==="undefined"||typeof r==="undefined"){
+            l=to_l;
+            r=to_r;
+            render(l,r);
+            return;
+        }
+        from_l=l;
+        from_r=r;
+        self.animate(function (progress) {
+            l=getCurvalue(from_l, to_l, progress);
+            r=getCurvalue(from_r, to_r, progress);
+            render(l,r);
+        }, 30);
+        //render(transf.toView(range.low, "x"), transf.toView(range.high, "x"));
     };
 }
 
@@ -539,10 +566,10 @@ function PointInfo(parent, coord, transf) {
             line.setAttribute("y1", transf.box.y);
         if (line.getAttribute("y2") != transf.box.h) 
             line.setAttribute("y2", transf.box.h);
-        
+
         var idx = searchIdx(coord.graph[0].data, v, 2);
         if (idx) {
-            x = coord.graph[0].data[idx];
+            var x=coord.graph[0].data[idx];
             vx = transf.toView(x, "x");
             el_date.textContent=toDateStr(x,true);
             var ya = coord.graph[0].child;
@@ -559,16 +586,15 @@ function PointInfo(parent, coord, transf) {
                     legend.style.visibility="hidden";
                 else
                     legend.style.visibility="";
-                if(typeof vx!= "undefined" && vx>=-5 && typeof vy!="undefined" && vy>=0){
+                if(typeof vx!= "undefined" && vx>=0 && typeof vy!="undefined" && vy>=0){
                     el.setAttribute("cx", vx);
                     el.setAttribute("cy", vy);
                     line.setAttribute("x1", vx);
                     line.setAttribute("x2", vx);
-                    //var bBox = legend.getBoundingClientRect()
-                    /*if(vx>transf.box.x && vx<transf.box.x+transf.box.w)
-                        legend.setAttribute("x", Math.min(vx,transf.box.x+transf.box.w-legend.getAttribute("width")));
-                    else*/
-                        legend.setAttribute("x",vx);
+                } else {
+                    el.setAttribute("cx", -10);
+                    line.setAttribute("x1", -10);
+                    line.setAttribute("x2", -10);
                 }
 
                 var val;
@@ -577,8 +603,10 @@ function PointInfo(parent, coord, transf) {
                 else
                     val = values[id] = createInfo(ya[i]);
 
-                if(legend.getAttribute("width")!=ya.length*140)
-                    legend.setAttribute("width", ya.length*140)  ;
+                legend.setAttribute("x",vx);
+                var bBox = el_box.getBoundingClientRect();
+                if(legend.getAttribute("width")!=bBox.width)
+                    legend.setAttribute("width", bBox.width+20);
                 val.textContent=ya[i].data[idx];
 
                 if(ya[i].disable){
@@ -603,8 +631,6 @@ function GraphButtons(parent, coord){
         var span_in=document.createElement("span");
         span_in.style.color=graph.color;
         span_in.className="span-input";
-        //var check_svg_check="M 1,12A 11 11 0 1 0 23,12A 11 11 0 1 0 1,12M10 17l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z";
-        //var check_svg_uncheck="M 1,12A 11 11 0 1 0 23,12A 11 11 0 1 0 1,12M 2,12A 10 10 0 1 0 22,11A 10 10 0 1 0 2,12";
         var check_svg_check="M 12,0a 11 11 0 1 0 1 0zM10,17l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z";
         var check_svg_uncheck="M 12,0a 11 11 0 1 0 1 0zm 1,2a 9 9 0 1 1 -1 0Z";
         span_in.innerHTML='<svg class="chx-svg" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation"><path d="'+check_svg_check+'"></path></svg><input id="'+graph.id+'" type="checkbox" class="chx-input" checked="">';
@@ -612,13 +638,6 @@ function GraphButtons(parent, coord){
         var input=span_in.getElementsByTagName('input')[0];
         var path=span_in.getElementsByTagName('path')[0];
 
-        /*var input=document.createElement("input");
-        input.className="option-input";
-        //input.setAttribute("id",graph.id);
-        input.setAttribute("type","checkbox");
-        input.setAttribute("checked","");
-        input.style.background=graph.color;
-        input.style.borderColor=graph.color;*/
         input.addEventListener('change', function (event) {
             if (event.target.checked){
                 graph.disable=false;
@@ -636,7 +655,6 @@ function GraphButtons(parent, coord){
         var span=document.createElement("span");
         span.className="chx-lbl";
         span.textContent=graph.name;
-
 
         label.appendChild(span_in/*input*/);
         label.appendChild(span);
@@ -822,6 +840,10 @@ function Animatable() {
     };
 }
 
+function getCurvalue(from_v, to_v, progress) {
+    return (to_v - from_v) * progress + from_v;
+}
+
 function Transformer(withoutScale) {
     Observable.call(this);
     Animatable.call(this);
@@ -878,9 +900,6 @@ function Transformer(withoutScale) {
         if(!d)d="x";
         return v / scale[d] + offset[d];
     };
-    function getCurvalue(from_v, to_v, progress) {
-        return (to_v - from_v) * progress + from_v;
-    }
     function move(from, to) {
         return function (progress) {
             scale = {
