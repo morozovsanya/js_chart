@@ -4,27 +4,33 @@ body {
 }
 
 @media screen and (max-width: 1000px) {
-  .chart { 
-     font-size: 2vw;
+  .chart-box { 
+     font-size: 3vw;
      width: 95vw;
      height: 80vh;
+     min-height: 400px;
   }
 }
 
 @media screen and (min-width: 1000px) {
-  .chart {
+  .chart-box {
      font-size: 1em;
      width: 48vw;
     height: 45vh;
   }
 }
 
-.chart {
-  /*width: 48vw;
-  height: 45vh;*/
+.chart-box{
   display: inline-flex;
   flex-direction: column;
   border: 1px solid #ccc;
+}
+
+.chart {
+  display: inline-flex;
+  flex-direction: column;
+  height: inherit;
+  width: inherit;
 }
 
 .x-labels {
@@ -139,21 +145,21 @@ body {
   float: left;
   display: flex;
   color: #ccc;
-  margin: 15px 15px 0px 0px;
+  margin: 10px 15px 10px 0px;
   cursor: pointer
 }
-
+/*
 .option-input:not(:checked) {
   background: transparent !important;
   content: '';
 }
-
+*/
 /*.option-input::-ms-check{
   -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
   filter: alpha(opacity=0);
   width: 10px;
 }*/
-
+/*
 .option-input {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -177,8 +183,7 @@ body {
   border-radius: 50%;
   color: white;
 }
-
-
+*/
 /*input[type="checkbox"]{
   position: absolute;
   left: -999em;
@@ -195,6 +200,7 @@ input[type="checkbox"] + span:before {
   font: bold 18px/7px Verdana, sans-serif;
   color: #339;
 }*/
+/*
 .option-input:checked::before {
   height: 100%;
   width: 100%;
@@ -204,7 +210,7 @@ input[type="checkbox"] + span:before {
   text-align: center;
   line-height: 1.2em;
 }
-
+*/
 /*input[type="checkbox"]:checked + span:before {
   content: "\2713";
   border-color: #336;
@@ -237,4 +243,31 @@ input[type="checkbox"] + span:before {
   position: absolute;
   width: 100%;
   color: #ccc;
+}
+
+.span-input{
+  display: flex;
+}
+.chx-input{
+  top: 0;
+  left: 0;
+  width: 100%;
+  cursor: inherit;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  padding: 0;
+  /*position: absolute;*/
+}
+
+.chx-svg{
+  fill: currentColor;
+  width: 1.5em;
+  height: 1.5em;
+  display: inline-block;
+  font-size: 1.5rem;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  user-select: none;
+  flex-shrink: 0;
+  margin: auto;
 }

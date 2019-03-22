@@ -44,7 +44,7 @@ function AxisLabelX(el, x, y, text) {
 function AxisLabelY(g_label, g_line, x, y, text) {
     var fontsize=parseFloat(getComputedStyle(g_label).fontSize);
     var label = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    label.setAttribute("x", x);
+    label.setAttribute("x", x + fontsize/2);
     label.setAttribute("y", y - fontsize/2);
     label.textContent = text;
     g_label.appendChild(label);
@@ -494,7 +494,7 @@ function PointInfo(parent, coord, transf) {
         el.setAttribute("r", 5);
         el.setAttribute("fill", "none");
         el.setAttribute("stroke", graph.color);
-        el.setAttribute("stroke-width", 4);
+        el.setAttribute("stroke-width", 3);
         svg.appendChild(el);
         return el;
     }
@@ -559,15 +559,15 @@ function PointInfo(parent, coord, transf) {
                     legend.style.visibility="hidden";
                 else
                     legend.style.visibility="";
-                if(typeof vx!= "undefined" && vx>=0 && typeof vy!="undefined" && vy>=0){
+                if(typeof vx!= "undefined" && vx>=-5 && typeof vy!="undefined" && vy>=0){
                     el.setAttribute("cx", vx);
                     el.setAttribute("cy", vy);
                     line.setAttribute("x1", vx);
                     line.setAttribute("x2", vx);
                     //var bBox = legend.getBoundingClientRect()
-                    if(vx>transf.box.x && vx<transf.box.x+transf.box.w)
+                    /*if(vx>transf.box.x && vx<transf.box.x+transf.box.w)
                         legend.setAttribute("x", Math.min(vx,transf.box.x+transf.box.w-legend.getAttribute("width")));
-                    else
+                    else*/
                         legend.setAttribute("x",vx);
                 }
 
@@ -599,26 +599,46 @@ function GraphButtons(parent, coord){
     
     var buttons={};
     function createButton(graph){
-        var input=document.createElement("input");
+
+        var span_in=document.createElement("span");
+        span_in.style.color=graph.color;
+        span_in.className="span-input";
+        //var check_svg_check="M 1,12A 11 11 0 1 0 23,12A 11 11 0 1 0 1,12M10 17l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z";
+        //var check_svg_uncheck="M 1,12A 11 11 0 1 0 23,12A 11 11 0 1 0 1,12M 2,12A 10 10 0 1 0 22,11A 10 10 0 1 0 2,12";
+        var check_svg_check="M 12,0a 11 11 0 1 0 1 0zM10,17l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z";
+        var check_svg_uncheck="M 12,0a 11 11 0 1 0 1 0zm 1,2a 9 9 0 1 1 -1 0Z";
+        span_in.innerHTML='<svg class="chx-svg" focusable="false" viewBox="0 0 24 24" aria-hidden="true" role="presentation"><path d="'+check_svg_check+'"></path></svg><input id="'+graph.id+'" type="checkbox" class="chx-input" checked="">';
+        var t=span_in.getElementsByTagName('input');
+        var input=span_in.getElementsByTagName('input')[0];
+        var path=span_in.getElementsByTagName('path')[0];
+
+        /*var input=document.createElement("input");
         input.className="option-input";
         //input.setAttribute("id",graph.id);
         input.setAttribute("type","checkbox");
         input.setAttribute("checked","");
         input.style.background=graph.color;
-        input.style.borderColor=graph.color;
-        input.addEventListener('change', function(event) {
-            if (event.target.checked)
+        input.style.borderColor=graph.color;*/
+        input.addEventListener('change', function (event) {
+            if (event.target.checked){
                 graph.disable=false;
-            else 
+                path.setAttribute("d",check_svg_check);
+            }
+            else {
                 graph.disable=true;
+                path.setAttribute("d",check_svg_uncheck);
+            }
             coord.update();
           });
         var label=document.createElement("label");
         label.className="graph-button";
+        
         var span=document.createElement("span");
         span.className="chx-lbl";
         span.textContent=graph.name;
-        label.appendChild(input);
+
+
+        label.appendChild(span_in/*input*/);
         label.appendChild(span);
         div.appendChild(label);
         return div;
@@ -662,6 +682,10 @@ function Chart(id, data) {
     var el = document.getElementById(id);
     if (!el)
         return;
+
+    var div=document.createElement("div");
+    div.className="chart";
+
     var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     svg.setAttribute("width", "100%");
     svg.setAttribute("height", "100%");
@@ -690,7 +714,8 @@ function Chart(id, data) {
     var graph_full = new GraphLine(svg, fullGraph, transf_nav);
     var nav = new Navigator(svg, ranger, transf_nav, graph_full.el);
 
-    el.appendChild(svg);
+    div.appendChild(svg);
+    el.appendChild(div);
     var buttons=new GraphButtons(el,fullGraph);
 
     transf_nav.registerObserver(nav);
@@ -711,7 +736,7 @@ function Chart(id, data) {
     function resize(event) {
         var fontsize=parseFloat(getComputedStyle(el).fontSize);
         var bBox = svg.getBoundingClientRect();
-        var nav_height = Math.max(4*fontsize, 50);
+        var nav_height =  Math.max(bBox.height/8, 40);//Math.max(4*fontsize, 50);
         transf_nav.setBox(0, bBox.height - nav_height, bBox.width, nav_height);
         transf_graph.setBox(0, 0, bBox.width, bBox.height - nav_height - 3*fontsize);
         transf_graph_cap.setBox(0, 0, bBox.width, bBox.height - nav_height - 3*fontsize);
@@ -732,7 +757,7 @@ function Chart(id, data) {
     //window.onresize = resize_t;
     //window.addEventListener('resize', resize_t());
     addEvent(window, "resize", resize_t);
-    svg.onresize = resize_t;
+    //svg.onresize = resize_t;
 }
 
 function searchIdx(arr, val, type) {

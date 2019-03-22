@@ -4,7 +4,7 @@
 <head>
     <link rel="stylesheet" href="js_chart.css">
     <link rel="stylesheet" href="day.css">
-    <script src="./js/js_chart.min.js"></script>
+    <script src="./js/js_chart.js"></script>
 
     <script type="text/javascript" src="chart_data.js"></script>
     <script type="text/javascript" >
@@ -41,16 +41,16 @@
             document.getElementsByTagName("head").item(0).replaceChild(newlink, oldlink);
         }
     </script>
-    
+
     <div class="switch-theme">
         <a id="switchTheme" href="#" onclick="SwitchMode();">Switch to Night Mode</a> 
     </div>
     <h1>Followers</h1>
     <div>
-        <div id="chart1" class="chart"></div>
-        <div id="chart2" class="chart"></div>
-        <div id="chart3" class="chart"></div>
-        <div id="chart4" class="chart"></div>
+        <div id="chart1" class="chart-box"></div>
+        <div id="chart2" class="chart-box"></div>
+        <div id="chart3" class="chart-box"></div>
+        <div id="chart4" class="chart-box"></div>
     </div>
 
 </body>
