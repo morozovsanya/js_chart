@@ -132,7 +132,10 @@ function XScale(parent, axis, transf, tickcnt) {
         if (this.range !== range) {
             this.range = range;
             //scale = transf.box.w / range
-            this.step = Math.pow(2, Math.round(Math.log2(range / d1 / tickcnt))) * d1;
+            var pow = 1;
+            while (pow <= (range / d1 / tickcnt)) pow *= 2;
+            //this.step = Math.pow(2, Math.round(Math.log2(range / d1 / tickcnt))) * d1;
+            this.step = pow * d1;
         }
         var step = this.step;
         var offset = axis.origin % step;
