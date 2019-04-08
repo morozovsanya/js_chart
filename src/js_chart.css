@@ -31,6 +31,7 @@ body {
   flex-direction: column;
   height: inherit;
   width: inherit;
+  overflow: hidden;
 }
 
 .x-labels {

@@ -300,7 +300,7 @@ function Navigator(parent, range, transf, g_el) {
 
     var selectedElement, offset, transform;
     var startDrag = function(evt) {
-        if (evt.target.classList.contains('draggable')) {
+        if (evt.target && evt.target.classList && evt.target.classList.contains('draggable')) {
             selectedElement = evt.target;
             //console.log(evt.type)
         } else
