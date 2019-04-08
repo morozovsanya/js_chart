@@ -300,11 +300,13 @@ function Navigator(parent, range, transf, g_el) {
 
     var selectedElement, offset, transform;
     var startDrag = function(evt) {
-        if (evt.target && evt.target.classList && evt.target.classList.contains('draggable')) {
+        //if (evt.target && evt.target.classList && evt.target.classList.contains('draggable')) {
             selectedElement = evt.target;
             //console.log(evt.type)
-        } else
-            return;
+       // } else if (evt.target && evt.target.className.indexOf('draggable')>=0)
+      //      selectedElement = evt.target;
+     //   else
+      //      return;
         offset = getMousePosition(evt, svg);
         offset.x -= parseFloat(selectedElement.getAttribute("x"));
         offset.y -= parseFloat(selectedElement.getAttribute("y"));
