@@ -191,7 +191,10 @@ function YScale(parent, axis, transf, tickcnt) {
             self.tickcnt= tickcnt;
             //scale = transf.box.h / range
             if (range > 10 * tickcnt){
-                this.step = Math.pow(10, Math.ceil(Math.log10(range / tickcnt)));
+                var pow = 1;
+                while (pow <= (range / tickcnt)) pow *= 10;
+                //this.step = Math.pow(10, Math.ceil(Math.log10(range / tickcnt)));
+                this.step = pow;
                 if(range/this.step<1*tickcnt/5) 
                     this.step=this.step/5;
                 else if(range/this.step<3*tickcnt/5) 
