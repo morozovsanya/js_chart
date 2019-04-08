@@ -1,5 +1,6 @@
 function AxisLabelX(el, x, y, text) {
     var label = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    //var label = document.createElement("text");
     //label.setAttribute("x", x);
     label.setAttribute("y", y);
     label.textContent = text;
@@ -651,10 +652,11 @@ function GraphButtons(parent, coord){
           });
         var label=document.createElement("label");
         label.className="graph-button";
+        label.textContent=graph.name;
         
-        var span=document.createElement("span");
+        /*var span=document.createElement("span");
         span.className="chx-lbl";
-        span.textContent=graph.name;
+        span.textContent=graph.name;*/
 
         label.appendChild(span_in/*input*/);
         label.appendChild(span);
@@ -705,6 +707,7 @@ function Chart(id, data) {
     div.className="chart";
 
     var svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    //var svg = document.createElement("svg");
     svg.setAttribute("width", "100%");
     svg.setAttribute("height", "100%");
     //svg.setAttribute("viewBox", "0 0 800 1400");
@@ -826,12 +829,12 @@ function Observable() {
 function Animatable() {
     var self = this;
     this.animate = function (func, dur) {
-        var start = performance.now();
+        var start = Date.now();
 
         function tick(now) {
             if (rafid !== self.rafid)
                 return;
-            var progress = Math.min((performance.now() - start) / dur, 1);
+            var progress = Math.min((Date.now() - start) / dur, 1);
             func(progress);
             if (progress < 1) requestAnimationFrame(tick);
         }
