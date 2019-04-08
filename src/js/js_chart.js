@@ -500,7 +500,8 @@ function PointInfo(parent, coord, transf) {
     svg.appendChild(line);
 
     var legend = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
-    legend.className.baseVal = "pointinfo";
+    if(legend.className)
+        legend.className.baseVal = "pointinfo";
     legend.setAttribute("x", 0);
     legend.setAttribute("y", 0);
     legend.setAttribute("width", 0);
@@ -583,9 +584,9 @@ function PointInfo(parent, coord, transf) {
                     el = circle[id] = createCircle(ya[i]);
 
                 var vy = transf.toView(ya[i].data[idx], "y");
-                if (vx<transf.box.x)
+                if (vx<transf.box.x && legend.style)
                     legend.style.visibility="hidden";
-                else
+                else if (legend.style)
                     legend.style.visibility="";
                 if(typeof vx!= "undefined" && vx>=0 && typeof vy!="undefined" && vy>=0){
                     el.setAttribute("cx", vx);
