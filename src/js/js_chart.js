@@ -895,7 +895,7 @@ function Transformer(withoutScale) {
             self.animate(move(from, to), 100);
     };
     this.toView = function (v, d) {
-        v = Math.trunc((v - offset[d]) * scale[d]);
+        v = Math.floor((v - offset[d]) * scale[d]);
         if (d === 'y')
             return self.box.y + self.box.h - v;
         return v;
