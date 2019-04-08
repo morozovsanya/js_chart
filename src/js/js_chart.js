@@ -659,7 +659,7 @@ function GraphButtons(parent, coord){
         span.textContent=graph.name;*/
 
         label.appendChild(span_in/*input*/);
-        label.appendChild(span);
+        //label.appendChild(span);
         div.appendChild(label);
         return div;
     }
